@@ -7,7 +7,7 @@
  * 
  */
 const fs = require('fs-extra')
-const gits = require('simple-git')
+const gits = require('simple-git/promise')
 const logger = require('./logger')
 const klaw = require('klaw-sync')
 const os = require('os')
@@ -34,7 +34,7 @@ class Installer {
       .silent(true)
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
-    const cloneUrl = private ? `https://${process.env.GITLAB_USERNAME}:${process.env.GITLAB_TOKEN}@gitlab.com/CustomDiscord/Engine.git` : `https://gitlab.com/CustomDiscord/Engine.git`
+    const cloneUrl = gitPrivate ? `https://${process.env.GITLAB_USERNAME}:${process.env.GITLAB_TOKEN}@gitlab.com/CustomDiscord/Engine.git` : `https://gitlab.com/CustomDiscord/Engine.git`
     let appVersion = '0.0.198'
     if (os.platform() === 'win32') {
       const apps = klaw(dpath, {

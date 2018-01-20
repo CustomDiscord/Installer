@@ -1,0 +1,11 @@
+{
+  "name": "customdiscord-loader",
+  "version": "0.1.0",
+  "description": "Advanced Discord client injection mod",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Nightmare",
+  "license": "MIT",
+  "dependencies": {},
+  "private": true
+}

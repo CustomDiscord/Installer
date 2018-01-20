@@ -1,0 +1,25 @@
+{
+  "name": "customdiscord-installer",
+  "version": "0.1.0",
+  "description": "Official CustomDiscord installer",
+  "main": "index.js",
+  "repository": "git@gitlab.com:CustomDiscord/Installer.git",
+  "author": "Nightmare & Relative",
+  "license": "MIT",
+  "bin": {
+    "customdiscord": "./index.js"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "commander": "^2.13.0",
+    "find-process": "^1.1.0",
+    "fs-extra": "^5.0.0",
+    "inquirer": "^5.0.1",
+    "klaw-sync": "^3.0.2",
+    "nodegit": "^0.20.3",
+    "ps-man": "https://github.com/FNCxPro/node-ps.git",
+    "semver": "^5.5.0",
+    "winston": "^2.4.0",
+    "yarn-install": "^0.5.1"
+  }
+}

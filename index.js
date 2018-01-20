@@ -93,6 +93,8 @@ async function go(action) {
   } else if (action === 'update') {
     logger.info('Updating CustomDiscord...')
     const result = await installer.update()
+    logger.info('Completed!')
+    process.exit(0)
   } else if (action === 'uninstall') {
     logger.info('We\'re sad to see you go. :(')
     logger.info('Uninstalling CustomDiscord...')
@@ -109,7 +111,7 @@ async function go(action) {
 }
 
 program
-  .name('CustomDiscord Installer')
+  .name('customdiscord')
   .version(require('./package.json').version)
 
 program
@@ -125,3 +127,5 @@ program
   .action(() => go('uninstall'))
 
 program.parse(process.argv)
+
+if (!process.argv.slice(2).length) program.outputHelp()

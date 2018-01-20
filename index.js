@@ -101,7 +101,7 @@ async function go(action) {
     const result = await installer.uninstall()
     logger.info('Done uninstalling CustomDiscord... :(')
     if (!result) {
-      logger.error('An error occurred while installing. Try again later. :)')
+      logger.error('An error occurred while uninstalling. Try again later. :)')
       return process.exit(1)
     }
     logger.info('Complete :(')

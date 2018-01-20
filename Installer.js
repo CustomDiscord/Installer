@@ -7,13 +7,15 @@
  * 
  */
 const fs = require('fs-extra')
-const git = require('nodegit')
+const gits = require('simple-git')
 const logger = require('./logger')
 const klaw = require('klaw-sync')
 const os = require('os')
 const path = require('path')
 const semver = require('semver')
 const yinstall = require('yarn-install')
+
+const gitPrivate = true
 
 class Installer {
   constructor(path) {
@@ -28,8 +30,11 @@ class Installer {
    * @returns {Boolean}
    */
   async install() {
+    const git = gits()
+      .silent(true)
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
+    const cloneUrl = private ? `https://${process.env.GITLAB_USERNAME}:${process.env.GITLAB_TOKEN}@gitlab.com/CustomDiscord/Engine.git` : `https://gitlab.com/CustomDiscord/Engine.git`
     let appVersion = '0.0.198'
     if (os.platform() === 'win32') {
       const apps = klaw(dpath, {
@@ -51,21 +56,8 @@ class Installer {
     let firstPass = true
     logger.info('Cloning CustomDiscord Engine...')
     try {
-      const repo = await git.Clone('https://gitlab.com/CustomDiscord/Engine.git', clonePath, {
-        fetchOpts: {
-          callbacks: {
-            certificateCheck: () => { return 1 },
-            credentials: (url, userName) => {
-              if (firstPass) {
-                firstPass = false
-                return git.Cred.userpassPlaintextNew(process.env.GITLAB_USERNAME || '', process.env.GITLAB_TOKEN || '')
-              } else {
-                return git.Cred.defaultNew()
-              }
-            }
-          }
-        }
-      })
+      const cloneResp = await git.clone(cloneUrl, clonePath)
+        
       logger.info('Installing dependencies...')
       yinstall({ cwd: clonePath })
       logger.info('Inserting injector into Discord...')
@@ -89,6 +81,8 @@ class Installer {
   }
 
   async update() {
+    const git = gits()
+      .silent(true)
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
     let appVersion = '0.0.198'
@@ -112,21 +106,7 @@ class Installer {
     let firstPass = true
     logger.info('Pulling CustomDiscord Engine...')
     try {
-      const repo = await git.Repository.open(clonePath)
-      await repo.fetchAll({
-        callbacks: {
-          certificateCheck: () => { return 1 },
-          credentials: (url, userName) => {
-            if (firstPass) {
-              firstPass = false
-              return git.Cred.userpassPlaintextNew(process.env.GITLAB_USERNAME || '', process.env.GITLAB_TOKEN || '')
-            } else {
-              return git.Cred.defaultNew()
-            }
-          }
-        }
-      })
-      await repo.mergeBranches('master', 'origin/master')
+      await git.cwd(clonePath).pull('origin', 'master')
       logger.info('Pulled from repo successfully!')
       logger.info('Re-installing dependencies...')
       yinstall({ cwd: clonePath })

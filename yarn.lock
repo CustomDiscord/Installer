@@ -359,9 +359,9 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
 
-"ps-man@https://github.com/FNCxPro/node-ps.git":
-  version "1.1.5"
-  resolved "https://github.com/FNCxPro/node-ps.git#57e74f4b074b1cb297592597c6296c1e993c1bd9"
+ps-man@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/ps-man/-/ps-man-1.1.7.tgz#c9da54bf10cd8eb8e9928c63ac49fb6bd09b2b32"
 
 pseudomap@^1.0.2:
   version "1.0.2"

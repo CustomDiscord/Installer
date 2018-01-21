@@ -1,21 +1,36 @@
-/**
- * customdiscord-installer
- * 
- * File...................Installer.js
- * Created on.............Friday, 19th January 2018 10:35:34 pm
- * Created by.............Relative
- * 
- */
 const fs = require('fs-extra')
-const gits = require('simple-git/promise')
 const logger = require('./logger')
 const klaw = require('klaw-sync')
 const os = require('os')
 const path = require('path')
 const semver = require('semver')
+const simplegit = require('simple-git/promise')
 const yinstall = require('yarn-install')
 
-const gitPrivate = true
+const git = simplegit()
+  .silent(true)
+
+function getAppVersion(dpath) {
+  if (os.platform() === 'win32') {
+    const apps = klaw(dpath, {
+      nofile: true,
+      filter: (item) => item.path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
+    })
+    const versions = []
+    apps.forEach((app) => {
+      const path = app.path
+      const matches = path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
+      if (matches.length < 2) return
+      versions.push(matches[1])
+    })
+    versions.sort(semver.rcompare)
+    appVersion = versions[0]
+    return appVersion
+  }
+  return '0.0.198'
+}
+
+const cloneUrl = 'https://github.com/CustomDiscord/Engine.git'
 
 class Installer {
   constructor(path) {
@@ -30,34 +45,15 @@ class Installer {
    * @returns {Boolean}
    */
   async install() {
-    const git = gits()
-      .silent(true)
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
-    const cloneUrl = gitPrivate ? `https://${process.env.GITLAB_USERNAME}:${process.env.GITLAB_TOKEN}@gitlab.com/CustomDiscord/Engine.git` : `https://gitlab.com/CustomDiscord/Engine.git`
-    let appVersion = '0.0.198'
-    if (os.platform() === 'win32') {
-      const apps = klaw(dpath, {
-        nofile: true,
-        filter: (item) => item.path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
-      })
-      const versions = []
-      apps.forEach((app) => {
-        const path = app.path
-        const matches = path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
-        if (matches.length < 2) return
-        versions.push(matches[1])
-      })
-      versions.sort(semver.rcompare)
-      appVersion = versions[0]
-    }
+    let appVersion = getAppVersion(dpath)
     const appPath = os.platform() === 'win32' ? path.join(dpath, `app-${appVersion}`, 'resources', 'app') : path.join(dpath, 'resources', 'app')
-
+    
     let firstPass = true
     logger.info('Cloning CustomDiscord Engine...')
     try {
       const cloneResp = await git.clone(cloneUrl, clonePath)
-        
       logger.info('Installing dependencies...')
       yinstall({ cwd: clonePath })
       logger.info('Inserting injector into Discord...')
@@ -81,26 +77,9 @@ class Installer {
   }
 
   async update() {
-    const git = gits()
-      .silent(true)
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
-    let appVersion = '0.0.198'
-    if (os.platform() === 'win32') {
-      const apps = klaw(dpath, {
-        nofile: true,
-        filter: (item) => item.path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
-      })
-      const versions = []
-      apps.forEach((app) => {
-        const path = app.path
-        const matches = path.match(/[/|\\]app-(\d+.\d+.\d+)[/|\\]/i)
-        if (matches.length < 2) return
-        versions.push(matches[1])
-      })
-      versions.sort(semver.rcompare)
-      appVersion = versions[0]
-    }
+    let appVersion = getAppVersion(dpath)
     const appPath = os.platform() === 'win32' ? path.join(dpath, `app-${appVersion}`, 'resources', 'app') : path.join(dpath, 'resources', 'app')
 
     let firstPass = true

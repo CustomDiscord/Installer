@@ -1,12 +1,4 @@
 #!/usr/bin/env node
-/**
- * customdiscord-installer
- * 
- * File...................index.js
- * Created on.............Friday, 19th January 2018 10:35:18 pm
- * Created by.............Relative
- * 
- */
 const Installer = require('./Installer')
 const chalk = require('chalk')
 const fp = require('find-process')
@@ -99,13 +91,13 @@ async function go(action) {
     logger.info('We\'re sad to see you go. :(')
     logger.info('Uninstalling CustomDiscord...')
     const result = await installer.uninstall()
-    logger.info('Done uninstalling CustomDiscord... :(')
+    logger.info('Done uninstalling CustomDiscord...')
     if (!result) {
-      logger.error('An error occurred while uninstalling. Try again later. :)')
+      logger.error('An error occurred while uninstalling. Try again later.')
       return process.exit(1)
     }
-    logger.info('Complete :(')
-    logger.info('Start your Discord install and CustomDiscord is uninstalled :(')
+    logger.info('Complete')
+    logger.info('Start your Discord install and CustomDiscord is uninstalled')
     process.exit(0)
   }
 }

@@ -7,7 +7,7 @@ const semver = require('semver')
 const simplegit = require('simple-git/promise')
 const yinstall = require('yarn-install')
 
-const git = simplegit()
+const _git = simplegit()
   .silent(true)
 
 function getAppVersion(dpath) {
@@ -45,6 +45,7 @@ class Installer {
    * @returns {Boolean}
    */
   async install() {
+    const git = _git
     const dpath = this.path
     const clonePath = path.join(dpath, 'CustomDiscord')
     let appVersion = getAppVersion(dpath)
@@ -81,11 +82,11 @@ class Installer {
     const clonePath = path.join(dpath, 'CustomDiscord')
     let appVersion = getAppVersion(dpath)
     const appPath = os.platform() === 'win32' ? path.join(dpath, `app-${appVersion}`, 'resources', 'app') : path.join(dpath, 'resources', 'app')
-
-    let firstPass = true
+    const git = simplegit(clonePath)
+      .silent(true)
     logger.info('Pulling CustomDiscord Engine...')
     try {
-      await git.cwd(clonePath).pull('origin', 'master')
+      await git.pull('origin', 'master')
       logger.info('Pulled from repo successfully!')
       logger.info('Re-installing dependencies...')
       yinstall({ cwd: clonePath })
@@ -139,6 +140,19 @@ class Installer {
       logger.error('Failed to uninstall...', err)
       return false
     }
+  }
+
+  installed() {
+    const dpath = this.path
+    const clonePath = path.join(dpath, 'CustomDiscord')
+    return fs.existsSync(clonePath)
+  }
+
+  installedVersion() {
+    if (!this.installed()) return '0.0.0'
+    const dpath = this.path
+    const pkg = require(path.join(dpath, 'CustomDiscord', 'package.json'))
+    return pkg.version
   }
 }
 

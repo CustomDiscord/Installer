@@ -80,12 +80,12 @@ async function go(action) {
       return process.exit(1)
     }
     logger.info('Complete!')
-    logger.info('Start your Discord install and CustomDiscord is installed!')
+    logger.info('CustomDiscord has installed successfully!')
     process.exit(0)
   } else if (action === 'update') {
     logger.info('Updating CustomDiscord...')
     const result = await installer.update()
-    logger.info('Completed!')
+    logger.info('Complete!')
     process.exit(0)
   } else if (action === 'uninstall') {
     logger.info('We\'re sad to see you go. :(')
@@ -96,8 +96,14 @@ async function go(action) {
       logger.error('An error occurred while uninstalling. Try again later.')
       return process.exit(1)
     }
-    logger.info('Complete')
-    logger.info('Start your Discord install and CustomDiscord is uninstalled')
+    logger.info('Complete!')
+    logger.info('CustomDiscord is uninstalled.')
+    process.exit(0)
+  } else if (action === 'version') {
+    logger.info(`CustomDiscord Installer: v${require('./package.json').version}`)
+    if (installer.installed()) {
+      logger.info(`CustomDiscord Engine: v${installer.installedVersion()}`)
+    }
     process.exit(0)
   }
 }
@@ -117,6 +123,10 @@ program
 program
   .command('uninstall')
   .action(() => go('uninstall'))
+
+program
+  .command('version')
+  .action(() => go('version'))
 
 program.parse(process.argv)
 

@@ -1,6 +1,6 @@
 {
   "name": "customdiscord-installer",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Official CustomDiscord installer",
   "main": "index.js",
   "repository": "https://github.com/CustomDiscord/Installer.git",

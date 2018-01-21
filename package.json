@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "description": "Official CustomDiscord installer",
   "main": "index.js",
-  "repository": "git@gitlab.com:CustomDiscord/Installer.git",
+  "repository": "https://github.com/CustomDiscord/Installer.git",
   "author": "Nightmare & Relative",
   "license": "MIT",
   "bin": {
